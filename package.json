@@ -1,0 +1,29 @@
+{
+  "name": "touhoubot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "deploy": "node deploy-commands.js",
+    "dev": "nodemon index.js",
+    "bot": "npm run deploy && npm run dev"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nittei1937/TouhouBot.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/nittei1937/TouhouBot/issues"
+  },
+  "homepage": "https://github.com/nittei1937/TouhouBot#readme",
+  "dependencies": {
+    "discord.js": "^14.27.0",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1"
+  }
+}

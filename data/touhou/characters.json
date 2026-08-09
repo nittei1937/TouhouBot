@@ -1,0 +1,18 @@
+{
+    "reimu_hakurei": {
+        "name": "博麗霊夢",
+        "aliases": ["霊夢", "巫女さん"],
+        "epithet": "博麗の巫女",
+        "race": "人間",
+        "firstAppearance": "東方紅魔郷",
+        "residence": "博麗神社",
+        "ability": "空を飛ぶ程度の能力",
+        "relatedCharacters": ["霧雨魔理沙"],
+        "themeSong": "少女綺想曲　～ Dream Battle",
+        "birthday": null,
+        "height": null,
+        "hobby": null,
+        "likes": null,
+        "dislikes": null
+    }
+}
