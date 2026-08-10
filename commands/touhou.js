@@ -3,6 +3,7 @@ const path = require("path");
 const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
 
 const charactersPath = path.join(__dirname, "..", "data", "touhou", "characters.json");
+const TOUHOU_WEBHOOK_NAME = "TouhouBot";
 
 function loadCharacters() {
     try {
@@ -70,6 +71,75 @@ function buildQuoteEmbed(character, quote) {
     return embed;
 }
 
+// このチャンネル用のTouhouBot Webhookを取得。無ければ作成する。
+async function getTouhouWebhook(channel, client) {
+    if (!channel || typeof channel.fetchWebhooks !== "function") {
+        throw new Error("このチャンネルではWebhookを使用できません。");
+    }
+
+    const webhooks = await channel.fetchWebhooks();
+
+    let webhook = webhooks.find(
+        hook => hook.name === TOUHOU_WEBHOOK_NAME && hook.owner?.id === client.user.id
+    );
+
+    if (!webhook) {
+        webhook = await channel.createWebhook({
+            name: TOUHOU_WEBHOOK_NAME,
+            reason: "TouhouBot botme機能用Webhook"
+        });
+    }
+
+    return webhook;
+}
+
+async function sendAsCharacter(interaction, character, word) {
+    if (!interaction.guild) {
+        return interaction.reply({
+            content: "このコマンドはサーバー内でのみ使用できます。",
+            ephemeral: true
+        });
+    }
+
+    if (!interaction.channel || typeof interaction.channel.createWebhook !== "function") {
+        return interaction.reply({
+            content: "このチャンネルではキャラクター投稿を使用できません。通常のテキストチャンネルで実行してください。",
+            ephemeral: true
+        });
+    }
+
+    if (word.length > 2000) {
+        return interaction.reply({
+            content: "投稿できる文章は2000文字以内です。",
+            ephemeral: true
+        });
+    }
+
+    await interaction.deferReply({ ephemeral: true });
+
+    try {
+        const webhook = await getTouhouWebhook(interaction.channel, interaction.client);
+
+        // characters.json の avatar が設定されていればキャラクター画像を使用する。
+        // 未設定ならWebhook側のアイコンを使用する。
+        const avatarURL = character.avatar ?? character.avatarUrl ?? character.avatarURL;
+
+        await webhook.send({
+            username: character.name,
+            ...(avatarURL ? { avatarURL } : {}),
+            content: word,
+            allowedMentions: { parse: [] }
+        });
+
+        return interaction.editReply("キャラクターとして投稿しました。");
+    } catch (error) {
+        console.error("[touhou] botme投稿エラー:", error);
+        return interaction.editReply(
+            "キャラクター投稿に失敗しました。Botに「Webhookの管理」権限があるか確認してください。"
+        );
+    }
+}
+
 module.exports = {
     data: new SlashCommandBuilder()
         .setName("touhou")
@@ -96,6 +166,25 @@ module.exports = {
                         .setDescription("キャラクター名（省略すると全キャラからランダム）")
                         .setRequired(false)
                         .setAutocomplete(true)
+                )
+        )
+        .addSubcommand(sub =>
+            sub
+                .setName("botme")
+                .setDescription("キャラクターとして文章を投稿")
+                .addStringOption(option =>
+                    option
+                        .setName("character")
+                        .setDescription("投稿するキャラクター")
+                        .setRequired(true)
+                        .setAutocomplete(true)
+                )
+                .addStringOption(option =>
+                    option
+                        .setName("word")
+                        .setDescription("キャラクターとして投稿する文章")
+                        .setRequired(true)
+                        .setMaxLength(2000)
                 )
         ),
 
@@ -174,6 +263,21 @@ module.exports = {
             const quote = pickRandom(characterQuotes);
 
             return interaction.reply({ embeds: [buildQuoteEmbed(character, quote)] });
+        }
+
+        if (subcommand === "botme") {
+            const query = interaction.options.getString("character", true);
+            const word = interaction.options.getString("word", true);
+            const resolved = resolveCharacter(characters, query);
+
+            if (!resolved) {
+                return interaction.reply({
+                    content: `「${query}」というキャラクターは見つかりませんでした。`,
+                    ephemeral: true,
+                });
+            }
+
+            return sendAsCharacter(interaction, resolved.character, word);
         }
     },
 };

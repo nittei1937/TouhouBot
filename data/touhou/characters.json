@@ -17,7 +17,8 @@
         "dislikes": ["修行", "神社の平穏を乱す異変", "努力"],
         "quotes": [
             { "text": "素敵な賽銭箱はそこよ", "source": "格闘ゲーム vs咲夜" }
-        ]
+        ],
+        "avatar": "https://assets.duno.jp/images/free_icon/th000-000101.png"
     },
     "marisa_kirisame": {
         "name": "霧雨魔理沙",
@@ -37,7 +38,8 @@
         "dislikes": ["自分の努力を人に見られること", "片付け・整理整頓"],
         "quotes": [
             { "text": "弾幕はパワーだよ", "source": "永夜抄 ５面" }
-        ]
+        ],
+        "avatar": "https://assets.duno.jp/images/free_icon/th000-000201.png"
     },
     "sakuya_izayoi": {
         "name": "十六夜咲夜",
@@ -54,7 +56,8 @@
         "weight": "不明",
         "hobby": "紅茶を淹れること、ナイフのコレクション",
         "likes": ["レミリア", "紅茶", "掃除・洗濯全般"],
-        "dislikes": ["主人の尊厳を汚すもの", "不衛生な環境"]
+        "dislikes": ["主人の尊厳を汚すもの", "不衛生な環境"],
+        "avatar": "https://assets.duno.jp/images/free_icon/th060-050101.png"
     },
     "youmu_konpaku": {
         "name": "魂魄妖夢",
@@ -74,7 +77,8 @@
         "dislikes": ["幽々子の無理難題", "お化け・怪談"],
         "quotes": [
             { "text": "･･･妖怪が鍛えたこの楼観剣に斬れぬものなど、あんまり無い！", "source": "妖々夢 霊夢ルート" }
-        ]
+        ],
+        "avatar": "https://assets.duno.jp/images/free_icon/th070-050101.png"
     },
     "remilia_scarlet": {
         "name": "レミリア・スカーレット",
